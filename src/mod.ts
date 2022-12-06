@@ -41,3 +41,15 @@ APIMsgHandler.on('ROOMID', (roomId: number) => {
         db.query('INSERT INTO `log`(`roomId` ,`uid`, `nickname`, `text`) VALUES(?, ?, ?, ?)', [roomId, data[2][0], data[2][1], data[1]]);
     });
 })
+
+Deno.addSignalListener('SIGTERM', () => {
+    Deno.exit()
+})
+
+Deno.addSignalListener('SIGINT', () => {
+    Deno.exit()
+})
+
+globalThis.addEventListener('unload', () => {
+    console.log(`[弹幕日志插件] 插件退出`);
+})
