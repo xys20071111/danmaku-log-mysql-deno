@@ -38,7 +38,13 @@ APIMsgHandler.on('AUTH', (result: string) => {
 APIMsgHandler.on('ROOMID', (roomId: number) => {
     console.log(`[弹幕日志插件] 工作在${roomId}`);
     APIMsgHandler.on('DANMU_MSG', (data: Array<any>) => {
-        db.query('INSERT INTO `log`(`roomId` ,`uid`, `nickname`, `text`) VALUES(?, ?, ?, ?)', [roomId, data[2][0], data[2][1], data[1]]);
+        try{
+            db.query('INSERT INTO `log`(`roomId` ,`uid`, `nickname`, `text`) VALUES(?, ?, ?, ?)', [roomId, data[2][0], data[2][1], data[1]]);
+        } catch (e) {
+            console.error(`[弹幕日志插件] 写日志失败 弹幕信息 ${data[2][0]} ${data[2][1]} ${data[1]}`)
+            console.log((e as Error).message)
+        }
+        
     });
 })
 
