@@ -39,11 +39,18 @@ APIMsgHandler.on('ROOMID', (roomId: number) => {
     console.log(`[弹幕日志插件] 工作在${roomId}`);
     APIMsgHandler.on('DANMU_MSG', (data: Array<any>) => {
         db.execute('INSERT INTO `log`(`roomId` ,`uid`, `nickname`, `text`) VALUES(?, ?, ?, ?)', [roomId, data[2][0], data[2][1], data[1]])
-            .catch((reason) => {
-                console.error(`[弹幕日志插件] 写日志失败 弹幕信息 ${data[2][0]} ${data[2][1]} ${data[1]}`)
-                console.log((reason as Error).message)
-            })
+            .catch((reason: Error) => {
+                console.error(`[弹幕日志插件] 写日志失败 弹幕信息 ${data[2][0]} ${data[2][1]} ${data[1]}`);
+                console.log((reason as Error).message);
+            });
 
+    });
+    APIMsgHandler.on('SUPER_CHAT_MESSAGE', (data: any) => {
+        db.execute('INSERT INTO `log`(`roomId` ,`uid`, `nickname`, `text`) VALUES(?, ?, ?, ?)', [roomId, data['uid'], data['user_info']['uname'], data['message']])
+            .catch((reason: Error) => {
+                console.error(`[弹幕日志插件] 写日志失败 弹幕信息 ${data[2][0]} ${data[2][1]} ${data[1]}`);
+                console.log((reason as Error).message);
+            });
     });
 })
 
