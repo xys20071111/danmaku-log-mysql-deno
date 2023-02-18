@@ -14,7 +14,7 @@ interface IMessage {
 
 function registerCallback() {
     ws.addEventListener('open', () => {
-        ws.send(JSON.stringify({ cmd: "AUTH", data: config.token }))
+        console.log('[弹幕日志插件] 连接成功')
     })
     ws.addEventListener('close', () => {
         ws = new WebSocket(`ws://127.0.0.1:${config.apiPort}`)
@@ -27,14 +27,6 @@ function registerCallback() {
 }
 
 registerCallback()
-
-APIMsgHandler.on('AUTH', (result: string) => {
-    if (result === 'AUTHED') {
-        ws.send(JSON.stringify({ cmd: "ROOMID", data: config.token }))
-    } else {
-        console.log('[弹幕日志插件] 认证失败')
-    }
-})
 
 APIMsgHandler.on('DANMU_MSG', (room: number, data: Array<any>) => {
     db.execute('INSERT INTO `log`(`roomId` ,`uid`, `nickname`, `text`) VALUES(?, ?, ?, ?)', [room, data[2][0], data[2][1], data[1]])
