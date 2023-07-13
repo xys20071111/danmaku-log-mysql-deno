@@ -9,6 +9,7 @@ const db = await client.connect({
     hostname: config.host,
     port: config.port,
     poolSize: 10,
+    charset: 'utf8mb4'
 })
 
 export { db }
